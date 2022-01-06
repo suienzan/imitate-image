@@ -1,0 +1,8 @@
+node_modules
+.pnpm-debug.log
+
+gecko-id.json
+key.pem
+
+dist
+extension

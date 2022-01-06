@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "webworker"],
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": ["vite.config.*", "src/**/*", "src/**/*.vue"]
+}
