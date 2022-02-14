@@ -1,8 +1,8 @@
 node_modules
 .pnpm-debug.log
 
-gecko-id.json
 key.pem
+firefox/.web-extension-id
+chrome/_metadata
 
 dist
-extension

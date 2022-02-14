@@ -39,8 +39,8 @@ if options=$(getopt -o hk:p:s: --long help,api-key:,api-proxy:,api-secret: -- "$
     shift
   done
 
-  pnpm run build && pnpm run manifest:firefox &&
-  web-ext sign -c web-ext-config.cjs -s extension -a dist/firefox --channel=unlisted --api-key="$API_KEY" --api-secret="$API_SERCET" --api-proxy="$API_PROXY"
+  # pnpm run build && pnpm run manifest:firefox &&
+  web-ext sign -c web-ext-config.cjs -s firefox -a dist/firefox --channel=unlisted --api-key="$API_KEY" --api-secret="$API_SERCET" --api-proxy="$API_PROXY"
   exit 0
 
 else
