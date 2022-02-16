@@ -4,14 +4,31 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "manifest:firefox": "NODE_ENV=firefox node --loader ts-node/esm src/manifest.ts",
+    "manifest:chrome": "NODE_ENV=chrome node --loader ts-node/esm src/manifest.ts",
+    "dev:firefox": "tsup --watch --env.target=firefox",
+    "dev:chrome": "tsup --watch --env.target=chrome",
+    "build:firefox": "tsup --env.target=firefox",
+    "build:chrome": "tsup --env.target=chrome",
     "pack:crx": "bash pack-crx.sh"
   },
+  "dependencies": {
+    "jsonfile": "^6.1.0"
+  },
   "devDependencies": {
+    "@types/chrome": "^0.0.178",
+    "@types/jsonfile": "^6.1.0",
+    "@types/node": "^17.0.18",
+    "@types/offscreencanvas": "^2019.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
     "crx": "^5.0.1",
     "eslint": "^8.6.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "prettier": "^2.5.0",
-    "rimraf": "^3.0.2"
+    "ts-node": "^10.5.0",
+    "tsup": "^5.11.13",
+    "typescript": "^4.5.5"
   }
 }

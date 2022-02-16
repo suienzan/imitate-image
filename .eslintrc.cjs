@@ -4,7 +4,11 @@ module.exports = {
     es2021: true,
   },
   extends: ['airbnb-base'],
-  global: {
-    chrome: 'readonly',
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  rules: {
+    'import/extensions': 0,
+    'import/no-unresolved': 0,
+    'no-undef': 0,
   },
 };

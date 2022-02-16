@@ -1,3 +1,5 @@
+import { blobToBase64 } from '../utils';
+
 chrome.contextMenus.create({
   id: 'imitate-image',
   title: 'Copy imitated image',
@@ -5,13 +7,9 @@ chrome.contextMenus.create({
   contexts: ['image'],
 });
 
-const blobToBase64 = (blob) => new Promise((resolve) => {
-  const reader = new FileReader();
-  reader.onloadend = () => resolve(reader.result);
-  reader.readAsDataURL(blob);
-});
+chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
+  if (!(srcUrl && tab && tab.id)) return;
 
-chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, { id }) => {
   const blob = await fetch(srcUrl).then((response) => response.blob());
   const image = await createImageBitmap(blob);
 
@@ -20,26 +18,23 @@ chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, { id }) => {
   const offscreen = new OffscreenCanvas(width, height);
   const ctx = offscreen.getContext('2d');
 
-  ctx.drawImage(image, 0, 0, width, height);
+  ctx?.drawImage(image, 0, 0, width, height);
 
   const imitated = await offscreen.convertToBlob();
 
   const base64 = await blobToBase64(imitated);
 
-  chrome.tabs.sendMessage(id, base64);
+  chrome.tabs.sendMessage(tab.id, base64);
 });
 
-const showFinishedNotification = (message) => {
+declare let self: ServiceWorkerGlobalScope;
+
+const showNotification = (message: string) => {
   if (message) {
-    chrome.notifications.create({
-      type: 'basic',
-      title: 'Imitated image',
-      iconUrl: 'icon.png',
-      message,
-    });
+    self.registration.showNotification(message);
   }
 };
 
 chrome.runtime.onMessage.addListener((request) => {
-  showFinishedNotification(request.notification);
+  showNotification(request.notification);
 });
