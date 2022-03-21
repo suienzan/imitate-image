@@ -1,3 +1,5 @@
+import { ditherFisrtPixel } from 'src/utils';
+
 const copyCanvas = async (canvas: HTMLCanvasElement) => {
   const imageBlob: ClipboardItemDataType = await new Promise((resolve) => {
     canvas.toBlob((data) => {
@@ -22,7 +24,10 @@ chrome.runtime.onMessage.addListener(async (base64) => {
   canvas.height = height;
 
   const ctx = canvas.getContext('2d');
-  ctx?.drawImage(image, 0, 0, width, height);
+  if (!ctx) return;
+  ctx.drawImage(image, 0, 0, width, height);
+
+  ditherFisrtPixel(ctx);
 
   await copyCanvas(canvas);
 

@@ -10,7 +10,7 @@ export default defineConfig((options) => {
     clean: true,
     platform: 'browser',
     target: 'esnext',
-    format: ['esm'],
+    format: ['iife'],
     onSuccess: `pnpm manifest:${target}`,
   };
 });

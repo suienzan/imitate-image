@@ -19,7 +19,7 @@ const basic = {
   content_scripts: [
     {
       matches: ['*://*/*'],
-      js: ['content-script.js'],
+      js: ['content-script.global.js'],
     },
   ],
 };
@@ -28,7 +28,7 @@ const firefox = {
   manifest_version: 2,
   permissions: ['clipboardWrite', 'contextMenus', 'notifications', '<all_urls>'],
   background: {
-    scripts: ['background.js'],
+    scripts: ['background.global.js'],
   },
   applications: {
     gecko: {
@@ -57,7 +57,7 @@ const chrome = {
   ],
   host_permissions: hosts.map(({ hostname }) => `*://${hostname}/`),
   background: {
-    service_worker: 'background.js',
+    service_worker: 'background.global.js',
   },
 };
 

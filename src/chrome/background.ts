@@ -1,4 +1,4 @@
-import { blobToBase64 } from '../utils';
+import { blobToBase64, ditherFisrtPixel } from '../utils';
 
 chrome.contextMenus.create({
   id: 'imitate-image',
@@ -18,7 +18,10 @@ chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
   const offscreen = new OffscreenCanvas(width, height);
   const ctx = offscreen.getContext('2d');
 
-  ctx?.drawImage(image, 0, 0, width, height);
+  if (!ctx) return;
+  ctx.drawImage(image, 0, 0, width, height);
+
+  ditherFisrtPixel(ctx);
 
   const imitated = await offscreen.convertToBlob();
 
