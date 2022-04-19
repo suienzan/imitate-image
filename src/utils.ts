@@ -4,7 +4,10 @@ export const blobToBase64 = (blob: Blob): Promise<string> => new Promise((resolv
   reader.readAsDataURL(blob);
 });
 
-const dither = (x: number) => Math.floor(x + Math.random() * 16 - 16 / 2 + 256) % 256;
+// eslint-disable-next-line no-nested-ternary
+const ditherRangeStart = (x: number) => (x < 8 ? 0 : x > 255 - 7 ? 255 - 15 : x - 7);
+
+export const dither = (x: number) => ditherRangeStart(x) + Math.floor(Math.random() * 16);
 
 type IContext2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
