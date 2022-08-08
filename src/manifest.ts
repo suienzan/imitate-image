@@ -5,16 +5,14 @@ import { hosts } from './hosts.js';
 
 const json = (await readFile(new URL('../package.json', import.meta.url))).toString();
 
-const { version } = JSON.parse(json);
-
-const geckoId = 'imitate-image@suienzan';
+const { version, displayName, geckoId } = JSON.parse(json);
 
 const target = process.env.NODE_ENV;
 
 const file = fileURLToPath(new URL(`../extension/${target}/manifest.json`, import.meta.url));
 
 const basic = {
-  name: 'Imitate Image',
+  name: displayName,
   version,
   content_scripts: [
     {
