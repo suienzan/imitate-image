@@ -1,18 +1,32 @@
 import { ditherFisrtPixel } from 'src/utils';
 
 const copyCanvas = async (canvas: HTMLCanvasElement) => {
-  const imageBlob: ClipboardItemDataType = await new Promise((resolve) => {
+  const imageBlob: Blob = await new Promise((resolve) => {
     canvas.toBlob((data) => {
       if (!data) return;
       resolve(data);
     }, 'image/png');
   });
 
+  if (!navigator.clipboard?.write) {
+    const hint = `No ClipboardItem support.
+From version 87: this feature is behind the
+\`dom.events.asyncClipboard.clipboardItem\`
+preferences (needs to be set to true).
+To change preferences in Firefox, visit \`about:config\`.`;
+    chrome.runtime.sendMessage({
+      notification: hint,
+    });
+    return Promise.reject(hint);
+  }
+
   await navigator.clipboard.write([
     new ClipboardItem({
       'image/png': imageBlob,
     }),
   ]);
+
+  return Promise.resolve();
 };
 
 chrome.runtime.onMessage.addListener(async (base64) => {

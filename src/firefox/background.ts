@@ -8,6 +8,7 @@ const getReferrer = (url: string) => {
 };
 
 const showNotification = (message: string) => {
+  // icon is not required in Firefox
   // @ts-expect-error
   chrome.notifications.create({
     type: 'basic',
