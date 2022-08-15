@@ -17,8 +17,16 @@ export const ditherFisrtPixel = (ctx: IContext2D) => {
     data: [r, g, b],
   } = pixel;
 
-  const rgba = `rgba(${dither(r)}, ${dither(g)}, ${dither(b)}, 1)`;
+  const rgb = [dither(r), dither(g), dither(b)];
+
+  const rgba = `rgba(${rgb.join(',')}, 1)`;
 
   ctx.fillStyle = rgba;
   ctx.fillRect(0, 0, 1, 1);
+
+  const hex = rgb
+    .map((x) => x.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+  return hex;
 };

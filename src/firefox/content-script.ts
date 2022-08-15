@@ -41,9 +41,9 @@ chrome.runtime.onMessage.addListener(async (base64) => {
   if (!ctx) return;
   ctx.drawImage(image, 0, 0, width, height);
 
-  ditherFisrtPixel(ctx);
+  const seed = ditherFisrtPixel(ctx);
 
   await copyCanvas(canvas);
 
-  chrome.runtime.sendMessage({ notification: 'Copied' });
+  chrome.runtime.sendMessage({ notification: `Copied, Seed: ${seed}.` });
 });

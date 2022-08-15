@@ -21,13 +21,13 @@ chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
   if (!ctx) return;
   ctx.drawImage(image, 0, 0, width, height);
 
-  ditherFisrtPixel(ctx);
+  const seed = ditherFisrtPixel(ctx);
 
   const imitated = await offscreen.convertToBlob();
 
   const base64 = await blobToBase64(imitated);
 
-  chrome.tabs.sendMessage(tab.id, base64);
+  chrome.tabs.sendMessage(tab.id, { base64, seed });
 });
 
 declare let self: ServiceWorkerGlobalScope;
