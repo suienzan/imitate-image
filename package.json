@@ -2,7 +2,7 @@
   "name": "imitate-image",
   "displayName": "Imitate Image",
   "geckoId": "imitate-image@suienzan",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
