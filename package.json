@@ -6,8 +6,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "manifest:firefox": "NODE_ENV=firefox node --loader ts-node/esm src/manifest.ts",
-    "manifest:chrome": "NODE_ENV=chrome node --loader ts-node/esm src/manifest.ts",
+    "manifest:firefox": "NODE_ENV=firefox tsx src/manifest.ts",
+    "manifest:chrome": "NODE_ENV=chrome tsx src/manifest.ts",
     "dev:firefox": "tsup --watch --env.target=firefox",
     "dev:chrome": "tsup --watch --env.target=chrome",
     "build:firefox": "tsup --env.target=firefox",
@@ -31,8 +31,8 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "prettier": "^2.5.0",
-    "ts-node": "^10.5.0",
     "tsup": "^5.11.13",
+    "tsx": "^3.8.2",
     "typescript": "^4.5.5",
     "vitest": "^0.9.3"
   }
