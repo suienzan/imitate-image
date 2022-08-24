@@ -10,6 +10,7 @@ Help() {
   echo "-p, --api-proxy      Set api secret."
   echo "-s, --api-secret     Set proxy."
   echo
+  exit 0
 }
 
 if options=$(getopt -o hk:p:s: --long help,api-key:,api-proxy:,api-secret: -- "$@"); then
