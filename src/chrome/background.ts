@@ -1,4 +1,10 @@
-import { blobToBase64, ditherFisrtPixel } from '../utils';
+import {
+  blobToBase64,
+  ditherFisrtPixel,
+  drawQRBackground,
+  getCellSize,
+  getShowWithPadding,
+} from '../utils';
 
 chrome.contextMenus.create({
   id: 'imitate-image',
@@ -7,7 +13,18 @@ chrome.contextMenus.create({
   contexts: ['image'],
 });
 
-chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
+getShowWithPadding().then((x) => {
+  if (!x) return;
+
+  chrome.contextMenus.create({
+    id: 'imitate-image-with-padding',
+    title: 'Copy imitated image with padding',
+    documentUrlPatterns: ['<all_urls>'],
+    contexts: ['image'],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) => {
   if (!(srcUrl && tab && tab.id)) return;
 
   const blob = await fetch(srcUrl).then((response) => response.blob());
@@ -15,19 +32,27 @@ chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
 
   const { width, height } = image;
 
-  const offscreen = new OffscreenCanvas(width, height);
-  const ctx = offscreen.getContext('2d');
+  const cellSize = Number(await getCellSize());
 
+  const padding = 8 * cellSize;
+  const w = width + 2 * padding;
+  const h = height + 2 * padding;
+  const canvas = new OffscreenCanvas(w, h);
+
+  const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  ctx.drawImage(image, 0, 0, width, height);
 
-  const seed = ditherFisrtPixel(ctx);
+  const addPadding = menuItemId === 'imitate-image-with-padding';
 
-  const imitated = await offscreen.convertToBlob();
+  if (addPadding) drawQRBackground(canvas, cellSize);
+  ctx.drawImage(image, padding, padding, width, height);
+  if (!addPadding) ditherFisrtPixel(ctx);
+
+  const imitated = await canvas.convertToBlob();
 
   const base64 = await blobToBase64(imitated);
 
-  chrome.tabs.sendMessage(tab.id, { base64, seed });
+  chrome.tabs.sendMessage(tab.id, { base64 });
 });
 
 declare let self: ServiceWorkerGlobalScope;

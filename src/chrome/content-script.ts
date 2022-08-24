@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener(async ({ base64, seed }) => {
+chrome.runtime.onMessage.addListener(async ({ base64 }) => {
   const imageBlob = await fetch(base64).then((response) => response.blob());
 
   await navigator.clipboard.write([
@@ -7,5 +7,5 @@ chrome.runtime.onMessage.addListener(async ({ base64, seed }) => {
     }),
   ]);
 
-  chrome.runtime.sendMessage({ notification: `Copied, Seed: ${seed}.` });
+  chrome.runtime.sendMessage({ notification: 'Copied.' });
 });

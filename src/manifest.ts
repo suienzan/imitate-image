@@ -20,15 +20,20 @@ const basic = {
       js: ['content-script.global.js'],
     },
   ],
+  options_ui: {
+    page: 'options.html',
+  },
 };
+
+const permissions = ['clipboardWrite', 'contextMenus', 'notifications', 'storage'];
 
 const firefox = {
   manifest_version: 2,
-  permissions: ['clipboardWrite', 'contextMenus', 'notifications', '<all_urls>'],
+  permissions: permissions.concat(['<all_urls>']),
   background: {
     scripts: ['background.global.js'],
   },
-  applications: {
+  browser_specific_settings: {
     gecko: {
       id: geckoId,
     },
@@ -46,13 +51,7 @@ const chrome = {
       },
     ],
   },
-  permissions: [
-    'clipboardWrite',
-    'contextMenus',
-    'declarativeNetRequest',
-    'declarativeNetRequestFeedback',
-    'notifications',
-  ],
+  permissions: permissions.concat(['declarativeNetRequest', 'declarativeNetRequestFeedback']),
   host_permissions: hosts.map(({ hostname }) => `*://${hostname}/`),
   background: {
     service_worker: 'background.global.js',
@@ -73,7 +72,8 @@ const sortByKey = (obj: Record<string, any>) => {
     'declarative_net_request',
     'background',
     'content_scripts',
-    'applications',
+    'options_ui',
+    'browser_specific_settings',
   ];
 
   const sorted = entries.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));

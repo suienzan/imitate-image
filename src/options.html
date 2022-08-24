@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <style>
+    .flex {
+      display: flex;
+    }
+    .flex-grow {
+      flex-grow: 1;
+    }
+    .ml-2 {
+      margin-left: 0.5rem;
+    }
+    .p-4 {
+      padding: 1rem;
+    }
+    .items-center {
+      align-items: center;
+    }
+  </style>
+  <body>
+    <form>
+      <div class="chrome-style p-4 flex items-center">
+        <input
+          type="checkbox"
+          id="showWithPadding"
+          name="showWithPadding"
+          value="showWithPadding"
+        />
+        <label for="showWithPadding">Add entry for imitate with padding</label>
+      </div>
+      <div>
+        <label for="cellSize">cellSize:</label>
+        <input
+          id="cellSize"
+          name="cellSize"
+          class="flex-grow ml-2"
+          value="0"
+          type="number"
+          min="0"
+        />
+        <button type="submit" class="ml-2">Save</button>
+      </div>
+    </form>
+    <script src="options.global.js"></script>
+  </body>
+</html>

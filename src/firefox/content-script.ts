@@ -1,4 +1,4 @@
-import { ditherFisrtPixel } from 'src/utils';
+import { ditherFisrtPixel, drawQRBackground, getCellSize } from 'src/utils';
 
 const copyCanvas = async (canvas: HTMLCanvasElement) => {
   const imageBlob: Blob = await new Promise((resolve) => {
@@ -29,21 +29,28 @@ To change preferences in Firefox, visit \`about:config\`.`;
   return Promise.resolve();
 };
 
-chrome.runtime.onMessage.addListener(async (base64) => {
+chrome.runtime.onMessage.addListener(async ({ base64, addPadding }) => {
   const blob = await fetch(base64).then((response) => response.blob());
   const image = await createImageBitmap(blob);
   const canvas = document.createElement('canvas');
   const { width, height } = image;
-  canvas.width = width;
-  canvas.height = height;
+
+  const cellSize = Number(await getCellSize());
+
+  const padding = 8 * cellSize;
+  const w = width + 2 * padding;
+  const h = height + 2 * padding;
+  canvas.width = w;
+  canvas.height = h;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  ctx.drawImage(image, 0, 0, width, height);
 
-  const seed = ditherFisrtPixel(ctx);
+  if (addPadding) drawQRBackground(canvas, cellSize);
+  ctx.drawImage(image, padding, padding, width, height);
+  if (!addPadding) ditherFisrtPixel(ctx);
 
   await copyCanvas(canvas);
 
-  chrome.runtime.sendMessage({ notification: `Copied, Seed: ${seed}.` });
+  chrome.runtime.sendMessage({ notification: 'Copied.' });
 });

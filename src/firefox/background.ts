@@ -1,4 +1,4 @@
-import { blobToBase64 } from '../utils';
+import { getShowWithPadding, blobToBase64 } from '../utils';
 import { hosts } from '../hosts';
 
 const getReferrer = (url: string) => {
@@ -24,7 +24,18 @@ chrome.contextMenus.create({
   contexts: ['image'],
 });
 
-chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
+getShowWithPadding().then((x) => {
+  if (!x) return;
+
+  chrome.contextMenus.create({
+    id: 'imitate-image-with-padding',
+    title: 'Copy imitated image with padding',
+    documentUrlPatterns: ['<all_urls>'],
+    contexts: ['image'],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) => {
   if (!(srcUrl && tab && tab.id)) return;
 
   const fetchWithReferrer = (url: string) => {
@@ -35,7 +46,10 @@ chrome.contextMenus.onClicked.addListener(async ({ srcUrl }, tab) => {
   const blob = await fetchWithReferrer(srcUrl).then((response) => response.blob());
   const base64 = await blobToBase64(blob);
 
-  chrome.tabs.sendMessage(tab.id, base64);
+  chrome.tabs.sendMessage(tab.id, {
+    base64,
+    addPadding: menuItemId === 'imitate-image-with-padding',
+  });
 });
 
 chrome.runtime.onMessage.addListener((request) => {
