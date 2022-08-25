@@ -1,4 +1,5 @@
 import {
+  align,
   blobToBase64,
   ditherFisrtPixel,
   drawQRBackground,
@@ -34,15 +35,18 @@ chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) =>
 
   const cellSize = Number(await getCellSize());
 
-  const padding = 8 * cellSize;
-  const w = width + 2 * padding;
-  const h = height + 2 * padding;
+  const addPadding = menuItemId === 'imitate-image-with-padding';
+
+  const padding = addPadding ? 8 * cellSize : 0;
+
+  const alignWithCell = align(cellSize);
+
+  const w = addPadding ? alignWithCell(width) + 2 * padding : width;
+  const h = addPadding ? alignWithCell(height) + 2 * padding : height;
   const canvas = new OffscreenCanvas(w, h);
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-
-  const addPadding = menuItemId === 'imitate-image-with-padding';
 
   if (addPadding) drawQRBackground(canvas, cellSize);
   ctx.drawImage(image, padding, padding, width, height);

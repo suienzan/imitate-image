@@ -45,6 +45,8 @@ export const ditherFisrtPixel = (ctx: IContext2D) => {
 
 const getRandomColor = () => (Math.random() > 0.5 ? 'white' : 'black');
 
+export const align = (size: number) => (x: number) => Math.ceil(x / size) * size;
+
 type Context2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
 const drawDot = (ctx: Context2D, step: number) => ([x, y]: number[]) => {

@@ -1,4 +1,6 @@
-import { ditherFisrtPixel, drawQRBackground, getCellSize } from 'src/utils';
+import {
+  align, ditherFisrtPixel, drawQRBackground, getCellSize,
+} from '../utils';
 
 const copyCanvas = async (canvas: HTMLCanvasElement) => {
   const imageBlob: Blob = await new Promise((resolve) => {
@@ -37,9 +39,12 @@ chrome.runtime.onMessage.addListener(async ({ base64, addPadding }) => {
 
   const cellSize = Number(await getCellSize());
 
-  const padding = 8 * cellSize;
-  const w = width + 2 * padding;
-  const h = height + 2 * padding;
+  const padding = addPadding ? 8 * cellSize : 0;
+
+  const alignWithCell = align(cellSize);
+
+  const w = addPadding ? alignWithCell(width) + 2 * padding : width;
+  const h = addPadding ? alignWithCell(height) + 2 * padding : height;
   canvas.width = w;
   canvas.height = h;
 
