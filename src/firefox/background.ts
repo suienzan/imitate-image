@@ -35,15 +35,30 @@ getShowWithPadding().then((x) => {
   });
 });
 
+const fetchWithReferrer = (url: string) => {
+  const referrer = getReferrer(url);
+  return referrer ? fetch(url, { referrer }) : fetch(url);
+};
+
+const safeFetch = async (url: string) => {
+  try {
+    return await fetchWithReferrer(url).then((response) => response.blob());
+  } catch (error) {
+    if (error instanceof Error) {
+      showNotification(error.message);
+    }
+
+    return undefined;
+  }
+};
+
 chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) => {
   if (!(srcUrl && tab && tab.id)) return;
 
-  const fetchWithReferrer = (url: string) => {
-    const referrer = getReferrer(url);
-    return referrer ? fetch(url, { referrer }) : fetch(url);
-  };
+  const blob = await safeFetch(srcUrl);
 
-  const blob = await fetchWithReferrer(srcUrl).then((response) => response.blob());
+  if (!blob) return;
+
   const base64 = await blobToBase64(blob);
 
   chrome.tabs.sendMessage(tab.id, {

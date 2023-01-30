@@ -25,10 +25,33 @@ getShowWithPadding().then((x) => {
   });
 });
 
+declare let self: ServiceWorkerGlobalScope;
+
+const showNotification = (message: string) => {
+  if (message) {
+    self.registration.showNotification(message);
+  }
+};
+
+const safeFetch = async (url: string) => {
+  try {
+    return await fetch(url).then((response) => response.blob());
+  } catch (error) {
+    if (error instanceof Error) {
+      showNotification(error.message);
+    }
+
+    return undefined;
+  }
+};
+
 chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) => {
   if (!(srcUrl && tab && tab.id)) return;
 
-  const blob = await fetch(srcUrl).then((response) => response.blob());
+  const blob = await safeFetch(srcUrl);
+
+  if (!blob) return;
+
   const image = await createImageBitmap(blob);
 
   const { width, height } = image;
@@ -58,14 +81,6 @@ chrome.contextMenus.onClicked.addListener(async ({ menuItemId, srcUrl }, tab) =>
 
   chrome.tabs.sendMessage(tab.id, { base64 });
 });
-
-declare let self: ServiceWorkerGlobalScope;
-
-const showNotification = (message: string) => {
-  if (message) {
-    self.registration.showNotification(message);
-  }
-};
 
 chrome.runtime.onMessage.addListener((request) => {
   showNotification(request.notification);
